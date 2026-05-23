@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YESBOSS 办公室导航</title>
+    <link rel="stylesheet" href="./office-style.css" />
+  </head>
+  <body>
+    <main class="office-shell">
+      <canvas id="officeCanvas" width="1024" height="576" aria-label="Office navigation map"></canvas>
+      <aside class="navigator-panel" aria-label="办公室导航">
+        <h1>办公室导航</h1>
+        <button id="toggleGridButton" type="button">隐藏网格</button>
+        <button id="moveDoorButton" type="button">走到门口</button>
+        <button id="clearPathButton" type="button">清除路径</button>
+        <button id="exitOfficeButton" type="button">返回茶水间</button>
+        <div class="status-box">
+          <p id="officeStatus">状态：待命</p>
+          <p id="officePosition">当前坐标：(1, 10)</p>
+          <p id="officeTarget">目标坐标：未选择</p>
+          <p><span class="green-text">绿色格</span> = 可通行</p>
+          <p><span class="red-text">红色格</span> = 障碍物</p>
+          <p><span class="path-text">蓝色线</span> = 行走路径</p>
+        </div>
+      </aside>
+    </main>
+
+    <script src="./office-map.js"></script>
+  </body>
+</html>

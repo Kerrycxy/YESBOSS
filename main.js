@@ -36,8 +36,10 @@ const focusCamera = {
   targetY: 402,
   followSpeed: 0.18,
 };
+const sceneExits = sceneConfig.exits ?? [];
 let isPhoneMode = false;
 let lastPlayerBounds = null;
+let isLeavingScene = false;
 let cameraState = {
   x: 0,
   y: 0,
@@ -620,6 +622,26 @@ function drawCollisionMarker(x, y) {
   ctx.restore();
 }
 
+function drawExitMarkers() {
+  sceneExits.forEach((exit) => {
+    const center = gridToScreen(exit.x, exit.y);
+
+    ctx.save();
+    ctx.fillStyle = "rgba(37, 99, 235, 0.2)";
+    ctx.strokeStyle = "rgba(29, 78, 216, 0.85)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.ellipse(center.x, center.y + tileHeight * 0.1, tileWidth * 0.34, tileHeight * 0.28, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#1d4ed8";
+    ctx.font = "bold 13px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(exit.label, center.x, center.y - 8);
+    ctx.restore();
+  });
+}
+
 function drawSceneTexture() {
   if (!isSceneTextureReady) {
     return;
@@ -651,6 +673,10 @@ function update(deltaTime) {
   player.update(deltaTime);
   updateCamera();
   updateHud();
+
+  if (!isPhoneMode) {
+    checkSceneExit();
+  }
 }
 
 function render() {
@@ -661,6 +687,7 @@ function render() {
   ctx.scale(cameraState.scale, cameraState.scale);
   drawSceneTexture();
   drawGrid();
+  drawExitMarkers();
   player.draw(ctx);
   ctx.restore();
 
@@ -676,6 +703,23 @@ function gameLoop(timestamp = 0) {
   update(deltaTime);
   render();
   requestAnimationFrame(gameLoop);
+}
+
+function checkSceneExit() {
+  if (isLeavingScene) {
+    return;
+  }
+
+  const exit = sceneExits.find(
+    (candidate) => player.targetX === candidate.x && player.targetY === candidate.y && !player.isMoving(),
+  );
+
+  if (!exit) {
+    return;
+  }
+
+  isLeavingScene = true;
+  window.location.href = exit.href;
 }
 
 const movementKeys = {
