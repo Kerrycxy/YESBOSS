@@ -36,17 +36,16 @@ const focusCamera = {
   targetY: 402,
   followSpeed: 0.18,
 };
+const sceneExits = sceneConfig.exits ?? [];
 let isPhoneMode = false;
 let lastPlayerBounds = null;
+let isLeavingScene = false;
 let cameraState = {
   x: 0,
   y: 0,
   scale: 1,
 };
 let activeContactId = "lin";
-let phoneCheckAnimationTime = 0;
-const PHONE_CHECK_FRAME_COUNT = 5;
-const PHONE_CHECK_FRAME_DURATION = 190;
 
 const bgmAudio = new Audio("./assets/audio/bgm/office_ambient.ogg");
 bgmAudio.loop = true;
@@ -185,16 +184,16 @@ characterSprite.addEventListener("error", () => {
 });
 characterSprite.src = spriteConfig.src;
 
-const phoneCheckSprite = new Image();
-let isPhoneCheckSpriteReady = false;
+const phoneCloseupSprite = new Image();
+let isPhoneCloseupSpriteReady = false;
 
-phoneCheckSprite.addEventListener("load", () => {
-  isPhoneCheckSpriteReady = true;
+phoneCloseupSprite.addEventListener("load", () => {
+  isPhoneCloseupSpriteReady = true;
 });
-phoneCheckSprite.addEventListener("error", () => {
-  isPhoneCheckSpriteReady = false;
+phoneCloseupSprite.addEventListener("error", () => {
+  isPhoneCloseupSpriteReady = false;
 });
-phoneCheckSprite.src = "./assets/character-phone-check-spritesheet.png";
+phoneCloseupSprite.src = "./assets/character-phone-closeup.png";
 
 // 0 = empty ground, 1 = obstacle.
 const collisionMap = generateCollisionMapFromConfig(sceneConfig);
@@ -247,8 +246,8 @@ class Character {
     const bounds = getPlayerWorldBounds(this);
     lastPlayerBounds = bounds;
 
-    if (isPhoneMode && isPhoneCheckSpriteReady) {
-      this.drawPhoneCheckSprite(renderContext, bounds);
+    if (isPhoneMode && isPhoneCloseupSpriteReady) {
+      this.drawPhoneCloseupSprite(renderContext, bounds);
       return;
     }
 
@@ -274,26 +273,24 @@ class Character {
     renderContext.restore();
   }
 
-  drawPhoneCheckSprite(renderContext, bounds) {
-    const frameWidth = phoneCheckSprite.width / PHONE_CHECK_FRAME_COUNT;
-    const frameHeight = phoneCheckSprite.height;
-    const frameColumn = Math.min(
-      PHONE_CHECK_FRAME_COUNT - 1,
-      Math.floor(phoneCheckAnimationTime / PHONE_CHECK_FRAME_DURATION),
-    );
+  drawPhoneCloseupSprite(renderContext, bounds) {
+    const closeupHeight = 232;
+    const closeupWidth = closeupHeight * (phoneCloseupSprite.width / phoneCloseupSprite.height);
+    const x = bounds.footX - closeupWidth * 0.5;
+    const y = bounds.footY - closeupHeight;
 
     renderContext.save();
     renderContext.imageSmoothingEnabled = false;
     renderContext.drawImage(
-      phoneCheckSprite,
-      frameColumn * frameWidth,
+      phoneCloseupSprite,
       0,
-      frameWidth,
-      frameHeight,
-      bounds.x,
-      bounds.y,
-      spriteConfig.renderWidth,
-      spriteConfig.renderHeight,
+      0,
+      phoneCloseupSprite.width,
+      phoneCloseupSprite.height,
+      x,
+      y,
+      closeupWidth,
+      closeupHeight,
     );
     renderContext.restore();
   }
@@ -625,6 +622,26 @@ function drawCollisionMarker(x, y) {
   ctx.restore();
 }
 
+function drawExitMarkers() {
+  sceneExits.forEach((exit) => {
+    const center = gridToScreen(exit.x, exit.y);
+
+    ctx.save();
+    ctx.fillStyle = "rgba(37, 99, 235, 0.2)";
+    ctx.strokeStyle = "rgba(29, 78, 216, 0.85)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.ellipse(center.x, center.y + tileHeight * 0.1, tileWidth * 0.34, tileHeight * 0.28, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#1d4ed8";
+    ctx.font = "bold 13px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(exit.label, center.x, center.y - 8);
+    ctx.restore();
+  });
+}
+
 function drawSceneTexture() {
   if (!isSceneTextureReady) {
     return;
@@ -654,13 +671,12 @@ function updateHud() {
 
 function update(deltaTime) {
   player.update(deltaTime);
-
-  if (isPhoneMode) {
-    phoneCheckAnimationTime += deltaTime;
-  }
-
   updateCamera();
   updateHud();
+
+  if (!isPhoneMode) {
+    checkSceneExit();
+  }
 }
 
 function render() {
@@ -671,6 +687,7 @@ function render() {
   ctx.scale(cameraState.scale, cameraState.scale);
   drawSceneTexture();
   drawGrid();
+  drawExitMarkers();
   player.draw(ctx);
   ctx.restore();
 
@@ -686,6 +703,23 @@ function gameLoop(timestamp = 0) {
   update(deltaTime);
   render();
   requestAnimationFrame(gameLoop);
+}
+
+function checkSceneExit() {
+  if (isLeavingScene) {
+    return;
+  }
+
+  const exit = sceneExits.find(
+    (candidate) => player.targetX === candidate.x && player.targetY === candidate.y && !player.isMoving(),
+  );
+
+  if (!exit) {
+    return;
+  }
+
+  isLeavingScene = true;
+  window.location.href = exit.href;
 }
 
 const movementKeys = {
@@ -819,7 +853,6 @@ function sendChatMessage() {
 
 function openPhoneMode() {
   isPhoneMode = true;
-  phoneCheckAnimationTime = 0;
   player.direction = "down";
   gameShell.classList.add("phone-mode");
   gameUi.setAttribute("aria-hidden", "false");
@@ -881,7 +914,7 @@ window.gameDebug = Object.freeze({
   openPhoneMode,
   closePhoneMode,
   characterSprite,
-  phoneCheckSprite,
+  phoneCloseupSprite,
   getPlayerState: () => ({
     targetX: player.targetX,
     targetY: player.targetY,
@@ -891,7 +924,6 @@ window.gameDebug = Object.freeze({
     isMoving: player.isMoving(),
     isPhoneMode,
     cameraState,
-    phoneCheckAnimationTime,
   }),
   player,
 });
