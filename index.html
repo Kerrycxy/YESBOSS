@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Isometric Grid Game Skeleton</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="game-shell" id="gameShell">
+      <div class="stage" id="stage">
+        <canvas id="gameCanvas" width="1024" height="576" aria-label="Isometric game map"></canvas>
+        <div class="game-ui" id="gameUi" aria-hidden="true">
+          <header class="top-status" aria-label="Game status bar">
+            <div class="brand-mark">YES, BOSS!</div>
+            <div class="status-card">
+              <span class="status-icon calendar-icon"></span>
+              <span>
+                <strong>第1天</strong>
+                <small>周一 2025/05/26</small>
+              </span>
+              <b>09:15</b>
+            </div>
+            <div class="status-card">
+              <span class="status-icon cash-icon"></span>
+              <span>
+                <small>现金流</small>
+                <strong>¥100,000</strong>
+              </span>
+              <em>/小时 +2,500</em>
+            </div>
+            <div class="status-card compact">
+              <span class="status-icon mood-icon"></span>
+              <span>
+                <small>士气</small>
+                <strong>80</strong>
+              </span>
+              <em>稳定</em>
+            </div>
+            <div class="status-card compact">
+              <span class="status-icon trust-icon"></span>
+              <span>
+                <small>董事会信任</small>
+                <strong>60</strong>
+              </span>
+              <em>中立</em>
+            </div>
+            <div class="status-card compact">
+              <span class="status-icon team-icon"></span>
+              <span>
+                <small>员工人数</small>
+                <strong>5/20</strong>
+              </span>
+            </div>
+          </header>
+
+          <aside class="location-tag" aria-label="Current location">
+            <span class="pin-dot"></span>
+            <strong>茶水间</strong>
+            <small>TEA ROOM</small>
+          </aside>
+
+          <section class="phone-panel" aria-label="Phone messages">
+            <div class="phone-panel-header">
+              <h2>手机消息</h2>
+              <div class="ap-pill"><span>AP</span><strong>3/3</strong></div>
+              <button class="close-phone" id="closePhoneButton" type="button" aria-label="关闭手机界面">×</button>
+            </div>
+            <div class="phone-tabs" role="tablist" aria-label="Phone tabs">
+              <button class="active" type="button">通讯录</button>
+              <button type="button">消息</button>
+            </div>
+            <div class="message-list">
+              <article class="message-card active">
+                <div class="avatar">林</div>
+                <div class="message-copy">
+                  <div><strong>林小满</strong><time>09:14</time></div>
+                  <p>产品需求又变了，工程组昨晚加班到很晚。</p>
+                </div>
+                <span class="badge">1</span>
+              </article>
+              <article class="message-card">
+                <div class="avatar glasses">张</div>
+                <div class="message-copy">
+                  <div><strong>张总监</strong><time>09:05</time></div>
+                  <p>关于下个版本的排期，我们需要再对齐一下。</p>
+                </div>
+                <span class="badge">2</span>
+              </article>
+              <article class="message-card">
+                <div class="avatar suit">陈</div>
+                <div class="message-copy">
+                  <div><strong>陈海明</strong><time>08:50</time></div>
+                  <p>测试环境出了点问题，需要你这边确认支持。</p>
+                </div>
+                <span class="badge">1</span>
+              </article>
+              <article class="message-card">
+                <div class="avatar dark">李</div>
+                <div class="message-copy">
+                  <div><strong>行政-李姐</strong><time>08:30</time></div>
+                  <p>下周团建的时间地点，麻烦确认一下哦。</p>
+                </div>
+                <span class="badge">1</span>
+              </article>
+              <article class="message-card">
+                <div class="avatar neutral">王</div>
+                <div class="message-copy">
+                  <div><strong>王大伟</strong><time>昨天</time></div>
+                  <p>这个方案我有个想法，改天聊聊？</p>
+                </div>
+                <span class="badge muted">0</span>
+              </article>
+            </div>
+            <div class="phone-actions">
+              <button type="button">回复</button>
+              <button type="button">安排会议</button>
+              <button type="button">忽略</button>
+            </div>
+          </section>
+
+          <nav class="bottom-actions" aria-label="Game actions">
+            <button class="blue" type="button"><span class="button-icon building-icon"></span>公司管理</button>
+            <button class="green" type="button"><span class="button-icon people-icon"></span>员工沟通</button>
+            <button class="orange" type="button"><span class="button-icon chart-icon"></span>项目推进</button>
+            <button class="red" type="button"><span class="button-icon yuan-icon"></span>财务决策</button>
+          </nav>
+        </div>
+      </div>
+      <section class="hud" aria-label="Game status">
+        <span id="positionLabel">Position: 9, 10</span>
+        <span>Move: WASD / Arrow Keys · Click character for phone</span>
+      </section>
+    </main>
+
+    <script src="./scene-config.js"></script>
+    <script src="./main.js"></script>
+  </body>
+</html>
