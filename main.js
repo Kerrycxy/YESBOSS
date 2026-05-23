@@ -6,6 +6,16 @@ const positionLabel = document.getElementById("positionLabel");
 const gameShell = document.getElementById("gameShell");
 const gameUi = document.getElementById("gameUi");
 const closePhoneButton = document.getElementById("closePhoneButton");
+const phonePanel = document.querySelector(".phone-panel");
+const phoneListView = document.getElementById("phoneListView");
+const conversationView = document.getElementById("conversationView");
+const backChatButton = document.getElementById("backChatButton");
+const chatHeaderAvatar = document.getElementById("chatHeaderAvatar");
+const chatContactName = document.getElementById("chatContactName");
+const chatContactSummary = document.getElementById("chatContactSummary");
+const chatThread = document.getElementById("chatThread");
+const chatComposer = document.getElementById("chatComposer");
+const chatInput = document.getElementById("chatInput");
 
 const sceneConfig = window.sceneConfig;
 const gridConfig = sceneConfig.grid;
@@ -33,6 +43,119 @@ let cameraState = {
   y: 0,
   scale: 1,
 };
+let activeContactId = "lin";
+
+const bgmAudio = new Audio("./assets/audio/bgm/office_ambient.ogg");
+bgmAudio.loop = true;
+bgmAudio.volume = 0.34;
+
+const soundEffects = {
+  click: createSfx("./assets/audio/ui/button_primary.ogg", 0.54),
+  modalOpen: createSfx("./assets/audio/ui/modal_open.ogg", 0.44),
+  modalClose: createSfx("./assets/audio/ui/modal_close.ogg", 0.5),
+  send: createSfx("./assets/audio/ui/input_send.ogg", 0.58),
+};
+let isBgmStarted = false;
+
+const contacts = {
+  lin: {
+    name: "林小满",
+    initial: "林",
+    avatarClass: "",
+    time: "09:14",
+    badge: "1",
+    summary: "产品需求又变了，工程组昨晚加班到很晚。",
+    messages: [
+      { from: "contact", text: "老板，产品需求又双叒变了，刚刚客户那边又提了新想法。" },
+      { from: "contact", text: "工程组昨晚又加班到凌晨2点，我都不好意思再让他们改了。" },
+      { from: "contact", text: "要不一起给大家加个鸡腿？或者夜宵安排起来？" },
+      { from: "player", text: "先把具体需求变更点发我，我看看影响范围。" },
+      { from: "player", text: "辛苦大家了，后续进展随时同步我。" },
+    ],
+  },
+  zhang: {
+    name: "张总监",
+    initial: "张",
+    avatarClass: "glasses",
+    time: "09:05",
+    badge: "2",
+    summary: "关于下个版本的排期，我们需要再对齐一下。",
+    messages: [
+      { from: "contact", text: "下个版本的排期我重新估了一版，风险主要在联调和测试。" },
+      { from: "contact", text: "如果下午能定优先级，今晚我就把人手排出来。" },
+      { from: "player", text: "先按核心链路排，非必要需求往后顺延。" },
+    ],
+  },
+  chen: {
+    name: "陈海明",
+    initial: "陈",
+    avatarClass: "suit",
+    time: "08:50",
+    badge: "1",
+    summary: "测试环境出了点问题，需要你这边确认支持。",
+    messages: [
+      { from: "contact", text: "测试环境支付回调不稳定，我怀疑是配置被覆盖了。" },
+      { from: "contact", text: "你这边能不能帮忙确认一下今天能不能恢复？" },
+      { from: "player", text: "我先让运维看日志，你把复现步骤发我。" },
+    ],
+  },
+  li: {
+    name: "行政-李姐",
+    initial: "李",
+    avatarClass: "dark",
+    time: "08:30",
+    badge: "1",
+    summary: "下周团建的时间地点，麻烦确认一下哦。",
+    messages: [
+      { from: "contact", text: "团建备选有周五晚上和周六下午，你觉得哪个更合适？" },
+      { from: "player", text: "周五晚上吧，尽量别占大家周末。" },
+    ],
+  },
+  wang: {
+    name: "王大伟",
+    initial: "王",
+    avatarClass: "neutral",
+    time: "昨天",
+    badge: "0",
+    summary: "这个方案我有个想法，改天聊聊？",
+    messages: [
+      { from: "contact", text: "这个方案我有个替代思路，可能能少做一半页面。" },
+      { from: "player", text: "可以，下午找我过一下。" },
+    ],
+  },
+};
+
+function createSfx(src, volume) {
+  const sound = new Audio(src);
+  sound.preload = "auto";
+  sound.volume = volume;
+  return sound;
+}
+
+function startBgm() {
+  if (isBgmStarted) {
+    return;
+  }
+
+  isBgmStarted = true;
+  bgmAudio.play().catch(() => {
+    isBgmStarted = false;
+  });
+}
+
+function playSfx(name) {
+  startBgm();
+
+  const source = soundEffects[name];
+
+  if (!source) {
+    return;
+  }
+
+  const sound = source.cloneNode();
+  sound.volume = source.volume;
+  sound.play().catch(() => {});
+}
 
 const sceneTexture = new Image();
 let isSceneTextureReady = false;
@@ -612,6 +735,8 @@ const movementKeys = {
 };
 
 window.addEventListener("keydown", (event) => {
+  startBgm();
+
   if (event.key === "Escape" && isPhoneMode) {
     closePhoneMode();
     return;
@@ -654,11 +779,86 @@ canvas.addEventListener("pointermove", (event) => {
   canvas.style.cursor = isPointInPlayerBounds(worldPoint) ? "pointer" : "default";
 });
 
+function openConversation(contactId) {
+  activeContactId = contactId;
+  phonePanel.classList.add("chat-mode");
+  phoneListView.hidden = true;
+  conversationView.hidden = false;
+  renderConversation();
+  window.setTimeout(() => chatInput.focus(), 60);
+}
+
+function showPhoneList() {
+  phonePanel.classList.remove("chat-mode");
+  conversationView.hidden = true;
+  phoneListView.hidden = false;
+}
+
+function renderConversation() {
+  const contact = contacts[activeContactId] ?? contacts.lin;
+
+  chatHeaderAvatar.className = `avatar ${contact.avatarClass}`.trim();
+  chatHeaderAvatar.textContent = contact.initial;
+  chatContactName.textContent = contact.name;
+  chatContactSummary.textContent = contact.summary;
+
+  document.querySelectorAll("[data-contact]").forEach((element) => {
+    element.classList.toggle("active", element.dataset.contact === activeContactId);
+  });
+
+  chatThread.replaceChildren();
+
+  contact.messages.forEach((message) => {
+    chatThread.appendChild(createChatRow(contact, message));
+  });
+
+  chatThread.scrollTop = chatThread.scrollHeight;
+}
+
+function createChatRow(contact, message) {
+  const row = document.createElement("div");
+  row.className = message.from === "player" ? "chat-row from-player" : "chat-row";
+
+  const bubble = document.createElement("p");
+  bubble.className = "chat-bubble";
+  bubble.textContent = message.text;
+
+  const avatar = document.createElement("span");
+
+  if (message.from === "player") {
+    avatar.className = "avatar neutral";
+    avatar.textContent = "我";
+    row.append(bubble, avatar);
+    return row;
+  }
+
+  avatar.className = `avatar ${contact.avatarClass}`.trim();
+  avatar.textContent = contact.initial;
+  row.append(avatar, bubble);
+  return row;
+}
+
+function sendChatMessage() {
+  const contact = contacts[activeContactId] ?? contacts.lin;
+  const text = chatInput.value.trim();
+
+  if (!text) {
+    return;
+  }
+
+  contact.messages.push({ from: "player", text });
+  chatInput.value = "";
+  renderConversation();
+  playSfx("send");
+}
+
 function openPhoneMode() {
   isPhoneMode = true;
   player.direction = "down";
   gameShell.classList.add("phone-mode");
   gameUi.setAttribute("aria-hidden", "false");
+  showPhoneList();
+  playSfx("modalOpen");
 }
 
 function closePhoneMode() {
@@ -666,9 +866,42 @@ function closePhoneMode() {
   gameShell.classList.remove("phone-mode");
   gameUi.setAttribute("aria-hidden", "true");
   canvas.style.cursor = "default";
+  showPhoneList();
+  playSfx("modalClose");
 }
 
 closePhoneButton.addEventListener("click", closePhoneMode);
+
+document.addEventListener("pointerdown", startBgm, { once: true });
+
+document.querySelectorAll(".bottom-actions button, .phone-tabs button, .phone-actions button").forEach((button) => {
+  button.addEventListener("click", () => playSfx("click"));
+});
+
+document.querySelectorAll(".message-card").forEach((card) => {
+  card.addEventListener("click", () => {
+    playSfx("click");
+    openConversation(card.dataset.contact);
+  });
+});
+
+document.querySelectorAll(".rail-contact").forEach((contactButton) => {
+  contactButton.addEventListener("click", () => {
+    playSfx("click");
+    activeContactId = contactButton.dataset.contact;
+    renderConversation();
+  });
+});
+
+backChatButton.addEventListener("click", () => {
+  playSfx("click");
+  showPhoneList();
+});
+
+chatComposer.addEventListener("submit", (event) => {
+  event.preventDefault();
+  sendChatMessage();
+});
 
 window.gameDebug = Object.freeze({
   sceneConfig,

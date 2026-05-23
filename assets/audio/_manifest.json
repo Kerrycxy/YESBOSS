@@ -1,0 +1,500 @@
+{
+  "project": "YES, BOSS!",
+  "source": "Procedural local synthesis based on audio prompt library v1.0 and demo task card.",
+  "sample_rate_hz": 44100,
+  "format": "OGG/Vorbis",
+  "notes": [
+    "Short effects are mono and normalized near -3 dBFS.",
+    "BGM tracks are stereo and normalized near -6 dBFS.",
+    "The prompt library says 47 assets, but its full folder table lists 52. This set includes those 52 plus promise_break and a demo media/fax_print alias.",
+    "For final shipped production, replace procedural versions with ElevenLabs/Suno renders using the same paths."
+  ],
+  "assets": [
+    {
+      "path": "audio/ui/button_primary.ogg",
+      "description": "P0 UI primary button click",
+      "duration_seconds": 0.5,
+      "expected_seconds": 0.5,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 6452
+    },
+    {
+      "path": "audio/ui/button_secondary.ogg",
+      "description": "P0 UI secondary button click",
+      "duration_seconds": 0.4,
+      "expected_seconds": 0.4,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 6005
+    },
+    {
+      "path": "audio/ui/button_disabled.ogg",
+      "description": "P0 disabled button rejection",
+      "duration_seconds": 0.3,
+      "expected_seconds": 0.3,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 4678
+    },
+    {
+      "path": "audio/ui/hover.ogg",
+      "description": "P0 faint hover cue",
+      "duration_seconds": 0.2,
+      "expected_seconds": 0.2,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 4609
+    },
+    {
+      "path": "audio/ui/modal_open.ogg",
+      "description": "P0 modal open",
+      "duration_seconds": 0.6,
+      "expected_seconds": 0.6,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 12141
+    },
+    {
+      "path": "audio/ui/modal_close.ogg",
+      "description": "P0 modal close",
+      "duration_seconds": 0.5,
+      "expected_seconds": 0.5,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 10863
+    },
+    {
+      "path": "audio/ui/input_keystroke.ogg",
+      "description": "P0 textarea keystroke",
+      "duration_seconds": 0.15,
+      "expected_seconds": 0.15,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 5672
+    },
+    {
+      "path": "audio/ui/input_send.ogg",
+      "description": "P0 send confirmation",
+      "duration_seconds": 0.4,
+      "expected_seconds": 0.4,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 9429
+    },
+    {
+      "path": "audio/hud/metric_up.ogg",
+      "description": "P0 metric increase",
+      "duration_seconds": 0.6,
+      "expected_seconds": 0.6,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 6306
+    },
+    {
+      "path": "audio/hud/metric_down.ogg",
+      "description": "P0 metric decrease",
+      "duration_seconds": 0.6,
+      "expected_seconds": 0.6,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 6256
+    },
+    {
+      "path": "audio/hud/metric_critical.ogg",
+      "description": "P0 low metric loop",
+      "duration_seconds": 1.2,
+      "expected_seconds": 1.2,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 18021
+    },
+    {
+      "path": "audio/hud/quarter_advance.ogg",
+      "description": "P0 quarter transition",
+      "duration_seconds": 1.5,
+      "expected_seconds": 1.5,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 16352
+    },
+    {
+      "path": "audio/hud/pressure_increase.ogg",
+      "description": "P0 pressure increase",
+      "duration_seconds": 0.8,
+      "expected_seconds": 0.8,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 5330
+    },
+    {
+      "path": "audio/hud/glow_high.ogg",
+      "description": "P0 high metric glow",
+      "duration_seconds": 0.7,
+      "expected_seconds": 0.7,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 7215
+    },
+    {
+      "path": "audio/card/hover.ogg",
+      "description": "P0 decision card hover",
+      "duration_seconds": 0.3,
+      "expected_seconds": 0.3,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 8643
+    },
+    {
+      "path": "audio/card/lift.ogg",
+      "description": "P0 decision card lift",
+      "duration_seconds": 0.5,
+      "expected_seconds": 0.5,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 10841
+    },
+    {
+      "path": "audio/card/select.ogg",
+      "description": "P0 decision card selected",
+      "duration_seconds": 0.6,
+      "expected_seconds": 0.6,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 11310
+    },
+    {
+      "path": "audio/card/reveal_effect.ogg",
+      "description": "P0 card effect reveal",
+      "duration_seconds": 1.0,
+      "expected_seconds": 1.0,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 8867
+    },
+    {
+      "path": "audio/card/confirm_decision.ogg",
+      "description": "P0 final decision confirmation",
+      "duration_seconds": 1.2,
+      "expected_seconds": 1.2,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 15141
+    },
+    {
+      "path": "audio/gossip/overhear.ogg",
+      "description": "P0 overheard office gossip",
+      "duration_seconds": 1.0,
+      "expected_seconds": 1.0,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 16151
+    },
+    {
+      "path": "audio/gossip/whisper_in.ogg",
+      "description": "P0 whisper starts",
+      "duration_seconds": 0.5,
+      "expected_seconds": 0.5,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 11056
+    },
+    {
+      "path": "audio/gossip/record.ogg",
+      "description": "P0 note taking",
+      "duration_seconds": 0.4,
+      "expected_seconds": 0.4,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 10011
+    },
+    {
+      "path": "audio/gossip/leave.ogg",
+      "description": "P0 leave tea room",
+      "duration_seconds": 0.6,
+      "expected_seconds": 0.6,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 10089
+    },
+    {
+      "path": "audio/press/enter.ogg",
+      "description": "P0 press conference enter",
+      "duration_seconds": 2.0,
+      "expected_seconds": 2.0,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 31147
+    },
+    {
+      "path": "audio/press/camera_flash.ogg",
+      "description": "P0 single camera flash",
+      "duration_seconds": 0.3,
+      "expected_seconds": 0.3,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 6920
+    },
+    {
+      "path": "audio/press/camera_flash_burst.ogg",
+      "description": "P0 camera flash burst",
+      "duration_seconds": 1.2,
+      "expected_seconds": 1.2,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 23014
+    },
+    {
+      "path": "audio/press/microphone_feedback.ogg",
+      "description": "P0 microphone feedback",
+      "duration_seconds": 0.6,
+      "expected_seconds": 0.6,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 6632
+    },
+    {
+      "path": "audio/press/recording_start.ogg",
+      "description": "P0 recording start",
+      "duration_seconds": 0.5,
+      "expected_seconds": 0.5,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 9549
+    },
+    {
+      "path": "audio/press/silence_tense.ogg",
+      "description": "P0 tense silence loop",
+      "duration_seconds": 3.0,
+      "expected_seconds": 3.0,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 40775
+    },
+    {
+      "path": "audio/press/typing_realtime.ogg",
+      "description": "P0 realtime typing loop",
+      "duration_seconds": 0.1,
+      "expected_seconds": 0.1,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 5398
+    },
+    {
+      "path": "audio/press/end_send.ogg",
+      "description": "P0 press statement send",
+      "duration_seconds": 0.8,
+      "expected_seconds": 0.8,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 11994
+    },
+    {
+      "path": "audio/boardroom/enter.ogg",
+      "description": "P1 boardroom enter",
+      "duration_seconds": 2.5,
+      "expected_seconds": 2.5,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 24847
+    },
+    {
+      "path": "audio/boardroom/chair_creak.ogg",
+      "description": "P1 chair creak",
+      "duration_seconds": 0.5,
+      "expected_seconds": 0.5,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 10368
+    },
+    {
+      "path": "audio/boardroom/pen_tap.ogg",
+      "description": "P1 pen tap",
+      "duration_seconds": 0.4,
+      "expected_seconds": 0.4,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 7417
+    },
+    {
+      "path": "audio/boardroom/speak_pressure.ogg",
+      "description": "P1 speak pressure",
+      "duration_seconds": 1.5,
+      "expected_seconds": 1.5,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 22982
+    },
+    {
+      "path": "audio/boardroom/dismiss.ogg",
+      "description": "P1 dismissed meeting",
+      "duration_seconds": 1.0,
+      "expected_seconds": 1.0,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 15332
+    },
+    {
+      "path": "audio/settlement/open.ogg",
+      "description": "P0 settlement open",
+      "duration_seconds": 1.5,
+      "expected_seconds": 1.5,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 16016
+    },
+    {
+      "path": "audio/settlement/fax_print.ogg",
+      "description": "P0 fax print media headline",
+      "duration_seconds": 1.2,
+      "expected_seconds": 1.2,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 19017
+    },
+    {
+      "path": "audio/settlement/headline_positive.ogg",
+      "description": "P0 positive headline",
+      "duration_seconds": 0.6,
+      "expected_seconds": 0.6,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 8529
+    },
+    {
+      "path": "audio/settlement/headline_negative.ogg",
+      "description": "P0 negative headline",
+      "duration_seconds": 0.7,
+      "expected_seconds": 0.7,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 7499
+    },
+    {
+      "path": "audio/settlement/headline_mocking.ogg",
+      "description": "P0 mocking headline",
+      "duration_seconds": 0.9,
+      "expected_seconds": 0.9,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 5971
+    },
+    {
+      "path": "audio/death/lights_off.ogg",
+      "description": "P0 lights off death",
+      "duration_seconds": 3.0,
+      "expected_seconds": 3.0,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 46678
+    },
+    {
+      "path": "audio/death/obituary_typewriter.ogg",
+      "description": "P0 typewriter character",
+      "duration_seconds": 0.08,
+      "expected_seconds": 0.08,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 5436
+    },
+    {
+      "path": "audio/death/obituary_bell.ogg",
+      "description": "P0 typewriter line bell",
+      "duration_seconds": 0.4,
+      "expected_seconds": 0.4,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 5958
+    },
+    {
+      "path": "audio/death/final_thud.ogg",
+      "description": "P0 final death thud",
+      "duration_seconds": 2.0,
+      "expected_seconds": 2.0,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 27451
+    },
+    {
+      "path": "audio/stinger/quarter_start.ogg",
+      "description": "P1 quarter start stinger",
+      "duration_seconds": 1.0,
+      "expected_seconds": 1.0,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 6632
+    },
+    {
+      "path": "audio/stinger/press_intro.ogg",
+      "description": "P1 press intro stinger",
+      "duration_seconds": 1.5,
+      "expected_seconds": 1.5,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 9722
+    },
+    {
+      "path": "audio/stinger/death.ogg",
+      "description": "P1 death stinger",
+      "duration_seconds": 2.0,
+      "expected_seconds": 2.0,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 17301
+    },
+    {
+      "path": "audio/bgm/office_ambient.ogg",
+      "description": "P0 main office ambient loop",
+      "duration_seconds": 60.0,
+      "expected_seconds": 60.0,
+      "channels": 2,
+      "sample_rate_hz": 44100,
+      "size_bytes": 413071
+    },
+    {
+      "path": "audio/bgm/decision_tension.ogg",
+      "description": "P0 decision tension loop",
+      "duration_seconds": 60.0,
+      "expected_seconds": 60.0,
+      "channels": 2,
+      "sample_rate_hz": 44100,
+      "size_bytes": 428196
+    },
+    {
+      "path": "audio/bgm/press_conference.ogg",
+      "description": "P0 press conference loop",
+      "duration_seconds": 60.0,
+      "expected_seconds": 60.0,
+      "channels": 2,
+      "sample_rate_hz": 44100,
+      "size_bytes": 424300
+    },
+    {
+      "path": "audio/bgm/death_obituary.ogg",
+      "description": "P0 death obituary bed",
+      "duration_seconds": 90.0,
+      "expected_seconds": 90.0,
+      "channels": 2,
+      "sample_rate_hz": 44100,
+      "size_bytes": 637040
+    },
+    {
+      "path": "audio/feedback/promise_break.ogg",
+      "description": "Demo core extra: broken promise callout",
+      "duration_seconds": 1.0,
+      "expected_seconds": 1.0,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 11703
+    },
+    {
+      "path": "audio/media/fax_print.ogg",
+      "description": "Demo compatibility alias for fax_print",
+      "duration_seconds": 1.2,
+      "expected_seconds": 1.2,
+      "channels": 1,
+      "sample_rate_hz": 44100,
+      "size_bytes": 19444
+    }
+  ]
+}

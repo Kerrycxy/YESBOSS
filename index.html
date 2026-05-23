@@ -65,56 +65,103 @@
               <div class="ap-pill"><span>AP</span><strong class="stat-number">3/3</strong></div>
               <button class="close-phone" id="closePhoneButton" type="button" aria-label="关闭手机界面">×</button>
             </div>
-            <div class="phone-tabs" role="tablist" aria-label="Phone tabs">
-              <button class="active" type="button">通讯录</button>
-              <button type="button">消息</button>
+            <div class="phone-list-view" id="phoneListView">
+              <div class="phone-tabs" role="tablist" aria-label="Phone tabs">
+                <button class="active" type="button">通讯录</button>
+                <button type="button">消息</button>
+              </div>
+              <div class="message-list">
+                <button class="message-card active" type="button" data-contact="lin">
+                  <span class="avatar">林</span>
+                  <span class="message-copy">
+                    <span><strong>林小满</strong><time>09:14</time></span>
+                    <p>产品需求又变了，工程组昨晚加班到很晚。</p>
+                  </span>
+                  <span class="badge">1</span>
+                </button>
+                <button class="message-card" type="button" data-contact="zhang">
+                  <span class="avatar glasses">张</span>
+                  <span class="message-copy">
+                    <span><strong>张总监</strong><time>09:05</time></span>
+                    <p>关于下个版本的排期，我们需要再对齐一下。</p>
+                  </span>
+                  <span class="badge">2</span>
+                </button>
+                <button class="message-card" type="button" data-contact="chen">
+                  <span class="avatar suit">陈</span>
+                  <span class="message-copy">
+                    <span><strong>陈海明</strong><time>08:50</time></span>
+                    <p>测试环境出了点问题，需要你这边确认支持。</p>
+                  </span>
+                  <span class="badge">1</span>
+                </button>
+                <button class="message-card" type="button" data-contact="li">
+                  <span class="avatar dark">李</span>
+                  <span class="message-copy">
+                    <span><strong>行政-李姐</strong><time>08:30</time></span>
+                    <p>下周团建的时间地点，麻烦确认一下哦。</p>
+                  </span>
+                  <span class="badge">1</span>
+                </button>
+                <button class="message-card" type="button" data-contact="wang">
+                  <span class="avatar neutral">王</span>
+                  <span class="message-copy">
+                    <span><strong>王大伟</strong><time>昨天</time></span>
+                    <p>这个方案我有个想法，改天聊聊？</p>
+                  </span>
+                  <span class="badge muted">0</span>
+                </button>
+              </div>
+              <div class="phone-actions">
+                <button type="button">回复</button>
+                <button type="button">安排会议</button>
+                <button type="button">忽略</button>
+              </div>
             </div>
-            <div class="message-list">
-              <article class="message-card active">
-                <div class="avatar">林</div>
-                <div class="message-copy">
-                  <div><strong>林小满</strong><time>09:14</time></div>
-                  <p>产品需求又变了，工程组昨晚加班到很晚。</p>
-                </div>
-                <span class="badge">1</span>
-              </article>
-              <article class="message-card">
-                <div class="avatar glasses">张</div>
-                <div class="message-copy">
-                  <div><strong>张总监</strong><time>09:05</time></div>
-                  <p>关于下个版本的排期，我们需要再对齐一下。</p>
-                </div>
-                <span class="badge">2</span>
-              </article>
-              <article class="message-card">
-                <div class="avatar suit">陈</div>
-                <div class="message-copy">
-                  <div><strong>陈海明</strong><time>08:50</time></div>
-                  <p>测试环境出了点问题，需要你这边确认支持。</p>
-                </div>
-                <span class="badge">1</span>
-              </article>
-              <article class="message-card">
-                <div class="avatar dark">李</div>
-                <div class="message-copy">
-                  <div><strong>行政-李姐</strong><time>08:30</time></div>
-                  <p>下周团建的时间地点，麻烦确认一下哦。</p>
-                </div>
-                <span class="badge">1</span>
-              </article>
-              <article class="message-card">
-                <div class="avatar neutral">王</div>
-                <div class="message-copy">
-                  <div><strong>王大伟</strong><time>昨天</time></div>
-                  <p>这个方案我有个想法，改天聊聊？</p>
-                </div>
-                <span class="badge muted">0</span>
-              </article>
-            </div>
-            <div class="phone-actions">
-              <button type="button">回复</button>
-              <button type="button">安排会议</button>
-              <button type="button">忽略</button>
+
+            <div class="conversation-view" id="conversationView" hidden>
+              <aside class="conversation-rail" aria-label="聊天联系人">
+                <button class="back-chat" id="backChatButton" type="button" aria-label="返回消息列表"></button>
+                <button class="rail-contact active" type="button" data-contact="lin">
+                  <span class="avatar">林</span>
+                  <time>09:14</time>
+                  <span class="badge">1</span>
+                </button>
+                <button class="rail-contact" type="button" data-contact="zhang">
+                  <span class="avatar glasses">张</span>
+                  <time>09:05</time>
+                  <span class="badge">2</span>
+                </button>
+                <button class="rail-contact" type="button" data-contact="chen">
+                  <span class="avatar suit">陈</span>
+                  <time>08:50</time>
+                  <span class="badge">1</span>
+                </button>
+                <button class="rail-contact" type="button" data-contact="li">
+                  <span class="avatar dark">李</span>
+                  <time>08:30</time>
+                  <span class="badge">1</span>
+                </button>
+                <button class="rail-contact" type="button" data-contact="wang">
+                  <span class="avatar neutral">王</span>
+                  <time>昨天</time>
+                  <span class="badge muted">0</span>
+                </button>
+              </aside>
+              <section class="chat-pane" aria-label="聊天窗口">
+                <header class="chat-contact-header">
+                  <span class="avatar" id="chatHeaderAvatar">林</span>
+                  <span>
+                    <strong id="chatContactName">林小满</strong>
+                    <small id="chatContactSummary">产品需求又变了，工程组昨晚加班到很晚。</small>
+                  </span>
+                </header>
+                <div class="chat-thread" id="chatThread"></div>
+                <form class="chat-composer" id="chatComposer">
+                  <input id="chatInput" type="text" maxlength="80" placeholder="输入消息..." autocomplete="off" />
+                  <button id="sendChatButton" type="submit">发送</button>
+                </form>
+              </section>
             </div>
           </section>
 
