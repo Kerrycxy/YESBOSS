@@ -204,45 +204,75 @@ function drawPhoneProp(renderContext, bounds, direction) {
   renderContext.save();
   renderContext.translate(position.x, position.y);
   renderContext.rotate(position.rotation);
-  renderContext.fillStyle = "#111827";
-  renderContext.strokeStyle = "#f8fafc";
-  renderContext.lineWidth = 1.4;
-  roundRect(renderContext, -4, -9, 16, 25, 4);
-  renderContext.fill();
-  renderContext.stroke();
-  renderContext.fillStyle = "#38bdf8";
-  roundRect(renderContext, -1, -5, 10, 14, 2);
-  renderContext.fill();
+  renderContext.scale(position.mirror ? -1 : 1, 1);
+  renderContext.imageSmoothingEnabled = false;
+  drawPixelPhoneInHand(renderContext);
   renderContext.restore();
 }
 
-function roundRect(renderContext, x, y, width, height, radius) {
-  const safeRadius = Math.min(radius, Math.abs(width) / 2, Math.abs(height) / 2);
+function drawPixelPhoneInHand(renderContext) {
+  renderContext.save();
 
+  renderContext.fillStyle = "#111827";
   renderContext.beginPath();
-  renderContext.moveTo(x + safeRadius, y);
-  renderContext.lineTo(x + width - safeRadius, y);
-  renderContext.quadraticCurveTo(x + width, y, x + width, y + safeRadius);
-  renderContext.lineTo(x + width, y + height - safeRadius);
-  renderContext.quadraticCurveTo(
-    x + width,
-    y + height,
-    x + width - safeRadius,
-    y + height,
-  );
-  renderContext.lineTo(x + safeRadius, y + height);
-  renderContext.quadraticCurveTo(x, y + height, x, y + height - safeRadius);
-  renderContext.lineTo(x, y + safeRadius);
-  renderContext.quadraticCurveTo(x, y, x + safeRadius, y);
+  renderContext.moveTo(-20, 6);
+  renderContext.lineTo(-9, 2);
+  renderContext.lineTo(-4, 10);
+  renderContext.lineTo(-16, 16);
   renderContext.closePath();
+  renderContext.fill();
+
+  renderContext.fillStyle = "#c98255";
+  renderContext.fillRect(-8, 1, 9, 13);
+  renderContext.fillRect(-5, 12, 11, 5);
+  renderContext.fillStyle = "#8f4f33";
+  renderContext.fillRect(-8, 11, 3, 5);
+
+  renderContext.fillStyle = "#0f172a";
+  renderContext.fillRect(-1, -14, 16, 27);
+  renderContext.fillStyle = "#f8fafc";
+  renderContext.fillRect(1, -12, 12, 23);
+  renderContext.fillStyle = "#111827";
+  renderContext.fillRect(2, -11, 10, 21);
+  renderContext.fillStyle = "#38bdf8";
+  renderContext.fillRect(4, -8, 6, 13);
+  renderContext.fillStyle = "#7dd3fc";
+  renderContext.fillRect(5, -7, 2, 10);
+  renderContext.fillStyle = "#e0f2fe";
+  renderContext.fillRect(6, 8, 3, 1);
+
+  renderContext.fillStyle = "#d99a6c";
+  renderContext.fillRect(-3, 1, 5, 12);
+  renderContext.fillRect(0, 10, 7, 4);
+  renderContext.fillStyle = "#8f4f33";
+  renderContext.fillRect(0, 13, 6, 2);
+
+  renderContext.restore();
 }
 
 function getPhonePropPosition(bounds, direction) {
   const positions = {
-    down: { x: bounds.x + bounds.width * 0.58, y: bounds.y + bounds.height * 0.48, rotation: -0.28 },
-    up: { x: bounds.x + bounds.width * 0.63, y: bounds.y + bounds.height * 0.48, rotation: 0.18 },
-    left: { x: bounds.x + bounds.width * 0.36, y: bounds.y + bounds.height * 0.48, rotation: -0.14 },
-    right: { x: bounds.x + bounds.width * 0.62, y: bounds.y + bounds.height * 0.48, rotation: 0.16 },
+    down: {
+      x: bounds.x + bounds.width * 0.62,
+      y: bounds.y + bounds.height * 0.5,
+      rotation: -0.22,
+    },
+    up: {
+      x: bounds.x + bounds.width * 0.62,
+      y: bounds.y + bounds.height * 0.49,
+      rotation: 0.18,
+    },
+    left: {
+      x: bounds.x + bounds.width * 0.38,
+      y: bounds.y + bounds.height * 0.5,
+      rotation: -0.12,
+      mirror: true,
+    },
+    right: {
+      x: bounds.x + bounds.width * 0.63,
+      y: bounds.y + bounds.height * 0.5,
+      rotation: 0.14,
+    },
   };
 
   return positions[direction] ?? positions.down;

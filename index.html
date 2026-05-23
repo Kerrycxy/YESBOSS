@@ -13,27 +13,26 @@
         <div class="game-ui" id="gameUi" aria-hidden="true">
           <header class="top-status" aria-label="Game status bar">
             <div class="brand-mark">YES, BOSS!</div>
-            <div class="status-card">
+            <div class="status-card calendar-card">
               <span class="status-icon calendar-icon"></span>
               <span>
-                <strong>第1天</strong>
+                <strong><span>第1天</span><b class="stat-number">09:15</b></strong>
                 <small>周一 2025/05/26</small>
               </span>
-              <b>09:15</b>
             </div>
             <div class="status-card">
               <span class="status-icon cash-icon"></span>
               <span>
                 <small>现金流</small>
-                <strong>¥100,000</strong>
+                <strong class="stat-number">100000</strong>
               </span>
-              <em>/小时 +2,500</em>
+              <em class="stat-number">时入 +2500</em>
             </div>
             <div class="status-card compact">
               <span class="status-icon mood-icon"></span>
               <span>
                 <small>士气</small>
-                <strong>80</strong>
+                <strong class="stat-number">80</strong>
               </span>
               <em>稳定</em>
             </div>
@@ -41,7 +40,7 @@
               <span class="status-icon trust-icon"></span>
               <span>
                 <small>董事会信任</small>
-                <strong>60</strong>
+                <strong class="stat-number">60</strong>
               </span>
               <em>中立</em>
             </div>
@@ -49,7 +48,7 @@
               <span class="status-icon team-icon"></span>
               <span>
                 <small>员工人数</small>
-                <strong>5/20</strong>
+                <strong class="stat-number">5/20</strong>
               </span>
             </div>
           </header>
@@ -63,7 +62,7 @@
           <section class="phone-panel" aria-label="Phone messages">
             <div class="phone-panel-header">
               <h2>手机消息</h2>
-              <div class="ap-pill"><span>AP</span><strong>3/3</strong></div>
+              <div class="ap-pill"><span>AP</span><strong class="stat-number">3/3</strong></div>
               <button class="close-phone" id="closePhoneButton" type="button" aria-label="关闭手机界面">×</button>
             </div>
             <div class="phone-tabs" role="tablist" aria-label="Phone tabs">

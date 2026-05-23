@@ -72,11 +72,17 @@ canvas {
   left: 0;
   right: 0;
   display: grid;
-  grid-template-columns: 230px 150px minmax(176px, 1fr) 118px 150px 122px;
-  gap: 8px;
+  grid-template-columns:
+    minmax(154px, 1.25fr)
+    minmax(112px, 0.9fr)
+    minmax(126px, 1fr)
+    minmax(80px, 0.68fr)
+    minmax(106px, 0.9fr)
+    minmax(86px, 0.72fr);
+  gap: 7px;
   align-items: center;
-  min-height: 58px;
-  padding: 8px 16px;
+  min-height: 54px;
+  padding: 7px 12px;
   background: rgba(255, 255, 255, 0.92);
   border-bottom: 1px solid rgba(148, 163, 184, 0.45);
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.1);
@@ -84,7 +90,7 @@ canvas {
 
 .brand-mark {
   color: #111827;
-  font-size: 30px;
+  font-size: 27px;
   font-style: italic;
   font-weight: 950;
   line-height: 1;
@@ -96,10 +102,10 @@ canvas {
 .status-card {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   min-width: 0;
-  min-height: 42px;
-  padding: 6px 12px;
+  min-height: 38px;
+  padding: 5px 9px;
   background: rgba(248, 250, 252, 0.9);
   border: 1px solid rgba(203, 213, 225, 0.9);
   border-radius: 6px;
@@ -113,8 +119,19 @@ canvas {
 
 .status-card strong {
   color: #111827;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1.05;
+}
+
+.calendar-card strong {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.calendar-card b {
+  color: #111827;
+  font-size: 15px;
 }
 
 .status-card small,
@@ -126,13 +143,21 @@ canvas {
   white-space: nowrap;
 }
 
+.stat-number {
+  font-family: Arial, "Helvetica Neue", ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
 .status-card em {
   color: #16a34a;
   font-weight: 800;
 }
 
 .status-card.compact {
-  padding-inline: 10px;
+  padding-inline: 8px;
 }
 
 .status-icon,
@@ -141,8 +166,8 @@ canvas {
   display: inline-grid;
   flex: 0 0 auto;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 6px;
 }
 
@@ -240,7 +265,7 @@ canvas {
 
 .location-tag {
   position: absolute;
-  top: 88px;
+  top: 78px;
   left: 18px;
   display: grid;
   grid-template-columns: 20px auto;
@@ -277,11 +302,15 @@ canvas {
 
 .phone-panel {
   position: absolute;
-  top: 86px;
-  right: 16px;
-  width: 282px;
+  top: 76px;
+  right: 14px;
+  bottom: 88px;
+  display: flex;
+  flex-direction: column;
+  width: 258px;
   max-width: calc(100% - 32px);
-  padding: 14px 12px 12px;
+  min-height: 0;
+  padding: 10px;
   background: rgba(248, 250, 252, 0.95);
   border: 1px solid rgba(148, 163, 184, 0.85);
   border-radius: 14px;
@@ -291,23 +320,23 @@ canvas {
 .phone-panel-header {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .phone-panel h2 {
   flex: 1;
   margin: 0;
   color: #111827;
-  font-size: 22px;
+  font-size: 18px;
   line-height: 1;
 }
 
 .ap-pill {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   color: #2563eb;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 900;
 }
 
@@ -316,19 +345,19 @@ canvas {
   color: #ffffff;
   background: #2563eb;
   border-radius: 5px;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .close-phone {
   display: grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
+  width: 23px;
+  height: 23px;
   border: 0;
   border-radius: 50%;
   color: #475569;
   background: rgba(226, 232, 240, 0.9);
-  font-size: 22px;
+  font-size: 19px;
   line-height: 1;
   cursor: pointer;
 }
@@ -336,7 +365,7 @@ canvas {
 .phone-tabs {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  margin-top: 14px;
+  margin-top: 9px;
   overflow: hidden;
   border: 1px solid #cbd5e1;
   border-radius: 7px;
@@ -344,11 +373,11 @@ canvas {
 }
 
 .phone-tabs button {
-  min-height: 34px;
+  min-height: 28px;
   border: 0;
   color: #111827;
   background: transparent;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 800;
 }
 
@@ -359,21 +388,22 @@ canvas {
 
 .message-list {
   display: grid;
-  gap: 8px;
-  max-height: 250px;
-  margin-top: 10px;
-  padding-right: 4px;
-  overflow: hidden;
+  flex: 1;
+  gap: 6px;
+  min-height: 0;
+  margin-top: 8px;
+  padding-right: 2px;
+  overflow-y: auto;
 }
 
 .message-card {
   position: relative;
   display: grid;
-  grid-template-columns: 46px 1fr 20px;
-  gap: 10px;
+  grid-template-columns: 36px 1fr 18px;
+  gap: 8px;
   align-items: center;
-  min-height: 58px;
-  padding: 8px;
+  min-height: 50px;
+  padding: 6px;
   background: rgba(255, 255, 255, 0.74);
   border: 1px solid rgba(203, 213, 225, 0.85);
   border-radius: 8px;
@@ -387,13 +417,13 @@ canvas {
 .avatar {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: 34px;
+  height: 34px;
   color: #ffffff;
   background: linear-gradient(135deg, #a16207, #78350f);
   border: 2px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 17px;
+  border-radius: 7px;
+  font-size: 15px;
   font-weight: 900;
   box-shadow: inset 0 -5px 0 rgba(0, 0, 0, 0.18);
 }
@@ -421,36 +451,40 @@ canvas {
 .message-copy div {
   display: flex;
   justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 4px;
+  gap: 6px;
+  margin-bottom: 2px;
 }
 
 .message-copy strong {
   color: #111827;
-  font-size: 15px;
+  font-size: 13px;
 }
 
 .message-copy time {
   color: #64748b;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .message-copy p {
   margin: 0;
   color: #374151;
-  font-size: 13px;
-  line-height: 1.32;
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1.24;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .badge {
   display: grid;
   place-items: center;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   color: #ffffff;
   background: #dc2626;
   border-radius: 50%;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 900;
 }
 
@@ -461,17 +495,18 @@ canvas {
 .phone-actions {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-top: 10px;
+  gap: 6px;
+  margin-top: 8px;
 }
 
 .phone-actions button {
-  min-height: 34px;
+  min-height: 29px;
   border: 1px solid #cbd5e1;
   border-radius: 7px;
   color: #1f2937;
   background: #ffffff;
   font-weight: 800;
+  font-size: 12px;
 }
 
 .bottom-actions {
@@ -615,9 +650,10 @@ canvas {
   }
 
   .phone-panel {
-    top: 72px;
+    top: 68px;
     right: 10px;
-    width: 276px;
+    bottom: 126px;
+    width: 252px;
   }
 
   .bottom-actions {
