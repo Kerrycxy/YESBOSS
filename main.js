@@ -44,6 +44,9 @@ let cameraState = {
   scale: 1,
 };
 let activeContactId = "lin";
+let phoneCheckAnimationTime = 0;
+const PHONE_CHECK_FRAME_COUNT = 5;
+const PHONE_CHECK_FRAME_DURATION = 190;
 
 const bgmAudio = new Audio("./assets/audio/bgm/office_ambient.ogg");
 bgmAudio.loop = true;
@@ -182,6 +185,17 @@ characterSprite.addEventListener("error", () => {
 });
 characterSprite.src = spriteConfig.src;
 
+const phoneCheckSprite = new Image();
+let isPhoneCheckSpriteReady = false;
+
+phoneCheckSprite.addEventListener("load", () => {
+  isPhoneCheckSpriteReady = true;
+});
+phoneCheckSprite.addEventListener("error", () => {
+  isPhoneCheckSpriteReady = false;
+});
+phoneCheckSprite.src = "./assets/character-phone-check-spritesheet.png";
+
 // 0 = empty ground, 1 = obstacle.
 const collisionMap = generateCollisionMapFromConfig(sceneConfig);
 
@@ -232,6 +246,12 @@ class Character {
   drawSprite(renderContext) {
     const bounds = getPlayerWorldBounds(this);
     lastPlayerBounds = bounds;
+
+    if (isPhoneMode && isPhoneCheckSpriteReady) {
+      this.drawPhoneCheckSprite(renderContext, bounds);
+      return;
+    }
+
     const frameWidth = characterSprite.width / spriteConfig.columns;
     const frameHeight = characterSprite.height / spriteConfig.rows;
     const directionRow = spriteConfig.directionRows[this.direction] ?? 0;
@@ -251,10 +271,30 @@ class Character {
       spriteConfig.renderHeight,
     );
 
-    if (isPhoneMode) {
-      drawPhoneProp(renderContext, bounds, this.direction);
-    }
+    renderContext.restore();
+  }
 
+  drawPhoneCheckSprite(renderContext, bounds) {
+    const frameWidth = phoneCheckSprite.width / PHONE_CHECK_FRAME_COUNT;
+    const frameHeight = phoneCheckSprite.height;
+    const frameColumn = Math.min(
+      PHONE_CHECK_FRAME_COUNT - 1,
+      Math.floor(phoneCheckAnimationTime / PHONE_CHECK_FRAME_DURATION),
+    );
+
+    renderContext.save();
+    renderContext.imageSmoothingEnabled = false;
+    renderContext.drawImage(
+      phoneCheckSprite,
+      frameColumn * frameWidth,
+      0,
+      frameWidth,
+      frameHeight,
+      bounds.x,
+      bounds.y,
+      spriteConfig.renderWidth,
+      spriteConfig.renderHeight,
+    );
     renderContext.restore();
   }
 
@@ -319,102 +359,6 @@ function getPlayerWorldBounds(character) {
     footX,
     footY,
   };
-}
-
-function drawPhoneProp(renderContext, bounds, direction) {
-  const position = getPhonePropPosition(bounds, direction);
-
-  renderContext.save();
-  renderContext.translate(position.x, position.y);
-  renderContext.rotate(position.rotation);
-  renderContext.scale(position.mirror ? -1 : 1, 1);
-  renderContext.imageSmoothingEnabled = false;
-  drawPixelPhoneInHand(renderContext);
-  renderContext.restore();
-}
-
-function drawPixelPhoneInHand(renderContext) {
-  renderContext.save();
-  renderContext.scale(1.12, 1.12);
-
-  // Hoodie sleeve from the body into the phone hand.
-  renderContext.fillStyle = "#111827";
-  renderContext.beginPath();
-  renderContext.moveTo(-23, 8);
-  renderContext.lineTo(-12, 1);
-  renderContext.lineTo(-5, 9);
-  renderContext.lineTo(-16, 18);
-  renderContext.lineTo(-25, 15);
-  renderContext.closePath();
-  renderContext.fill();
-  renderContext.fillStyle = "#242424";
-  renderContext.fillRect(-17, 6, 8, 8);
-
-  // Phone body first, then fingers over it so it reads as being held.
-  renderContext.fillStyle = "#0f172a";
-  renderContext.fillRect(-3, -17, 19, 33);
-  renderContext.fillStyle = "#020617";
-  renderContext.fillRect(-1, -15, 15, 29);
-  renderContext.fillStyle = "#27272a";
-  renderContext.fillRect(1, -12, 11, 21);
-  renderContext.fillStyle = "#111827";
-  renderContext.fillRect(2, -11, 9, 19);
-  renderContext.fillStyle = "#7dd3fc";
-  renderContext.fillRect(9, -12, 2, 16);
-  renderContext.fillStyle = "#38bdf8";
-  renderContext.fillRect(3, -8, 5, 11);
-  renderContext.fillStyle = "#e0f2fe";
-  renderContext.fillRect(4, -7, 2, 7);
-  renderContext.fillStyle = "#475569";
-  renderContext.fillRect(4, 12, 5, 1);
-
-  renderContext.fillStyle = "#c98255";
-  renderContext.fillRect(-10, 1, 9, 14);
-  renderContext.fillRect(-7, 13, 11, 5);
-  renderContext.fillRect(12, 0, 5, 16);
-  renderContext.fillRect(8, 10, 8, 5);
-  renderContext.fillStyle = "#e0a06f";
-  renderContext.fillRect(13, 2, 3, 10);
-  renderContext.fillRect(-8, 3, 3, 9);
-  renderContext.fillStyle = "#8f4f33";
-  renderContext.fillRect(-10, 12, 3, 5);
-  renderContext.fillRect(12, 14, 4, 3);
-
-  renderContext.fillStyle = "#d99a6c";
-  renderContext.fillRect(-4, 4, 5, 12);
-  renderContext.fillRect(0, 12, 8, 4);
-  renderContext.fillStyle = "#8f4f33";
-  renderContext.fillRect(1, 16, 6, 2);
-
-  renderContext.restore();
-}
-
-function getPhonePropPosition(bounds, direction) {
-  const positions = {
-    down: {
-      x: bounds.x + bounds.width * 0.64,
-      y: bounds.y + bounds.height * 0.49,
-      rotation: -0.2,
-    },
-    up: {
-      x: bounds.x + bounds.width * 0.62,
-      y: bounds.y + bounds.height * 0.49,
-      rotation: 0.18,
-    },
-    left: {
-      x: bounds.x + bounds.width * 0.38,
-      y: bounds.y + bounds.height * 0.5,
-      rotation: -0.12,
-      mirror: true,
-    },
-    right: {
-      x: bounds.x + bounds.width * 0.65,
-      y: bounds.y + bounds.height * 0.49,
-      rotation: 0.14,
-    },
-  };
-
-  return positions[direction] ?? positions.down;
 }
 
 function generateCollisionMapFromConfig(config) {
@@ -710,6 +654,11 @@ function updateHud() {
 
 function update(deltaTime) {
   player.update(deltaTime);
+
+  if (isPhoneMode) {
+    phoneCheckAnimationTime += deltaTime;
+  }
+
   updateCamera();
   updateHud();
 }
@@ -870,6 +819,7 @@ function sendChatMessage() {
 
 function openPhoneMode() {
   isPhoneMode = true;
+  phoneCheckAnimationTime = 0;
   player.direction = "down";
   gameShell.classList.add("phone-mode");
   gameUi.setAttribute("aria-hidden", "false");
@@ -931,6 +881,7 @@ window.gameDebug = Object.freeze({
   openPhoneMode,
   closePhoneMode,
   characterSprite,
+  phoneCheckSprite,
   getPlayerState: () => ({
     targetX: player.targetX,
     targetY: player.targetY,
@@ -940,6 +891,7 @@ window.gameDebug = Object.freeze({
     isMoving: player.isMoving(),
     isPhoneMode,
     cameraState,
+    phoneCheckAnimationTime,
   }),
   player,
 });
