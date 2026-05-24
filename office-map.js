@@ -18,27 +18,27 @@ const POSITION_EPSILON = 0.001;
 const grid = {
   width: 20,
   height: 14,
-  originX: 512,
+  originX: 112,
   originY: 44,
-  tileWidth: 64,
-  tileHeight: 32,
+  tileWidth: 43,
+  tileHeight: 36,
 };
 
-const officeDoor = { x: 0, y: 10 };
-const defaultTarget = { x: 13, y: 9 };
+const officeDoor = { x: 0, y: 13 };
+const defaultTarget = { x: 11, y: 8 };
 
-// 0 = empty ground, 1 = obstacle. This is the pure logic layer.
+// 0 = walkable floor, 1 = obstacle. These cells match the top-down map overlay.
 const collisionMap = createCollisionMap(grid.width, grid.height, [
-  { name: "coffee bar", fromX: 2, fromY: 0, toX: 7, toY: 1 },
-  { name: "boss desk", fromX: 9, fromY: 2, toX: 13, toY: 4 },
-  { name: "left desk upper", fromX: 4, fromY: 6, toX: 8, toY: 8 },
-  { name: "left desk lower", fromX: 4, fromY: 10, toX: 8, toY: 12 },
-  { name: "right desk upper", fromX: 13, fromY: 6, toX: 17, toY: 8 },
-  { name: "right desk lower", fromX: 13, fromY: 10, toX: 17, toY: 12 },
-  { name: "file cabinet", fromX: 17, fromY: 0, toX: 19, toY: 2 },
-  { name: "left door wall", cells: [[0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [0, 8]] },
-  { name: "water cooler", cells: [[0, 11], [0, 12], [1, 12]] },
-  { name: "plants", cells: [[0, 1], [1, 1], [1, 11], [18, 2], [19, 1]] },
+  { name: "top-left counter", fromX: 2, fromY: 0, toX: 6, toY: 2 },
+  { name: "boss desk", fromX: 8, fromY: 1, toX: 12, toY: 3 },
+  { name: "file cabinets", fromX: 14, fromY: 0, toX: 18, toY: 2 },
+  { name: "left upper desks", fromX: 4, fromY: 5, toX: 8, toY: 7 },
+  { name: "left lower desks", fromX: 4, fromY: 10, toX: 8, toY: 12 },
+  { name: "right upper desks", fromX: 12, fromY: 5, toX: 16, toY: 7 },
+  { name: "right lower desks", fromX: 12, fromY: 10, toX: 16, toY: 12 },
+  { name: "left wall", cells: [[0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [0, 8]] },
+  { name: "water cooler", cells: [[0, 9], [1, 9], [0, 10]] },
+  { name: "plants", cells: [[0, 1], [1, 1], [1, 10], [18, 6], [18, 11]] },
 ]);
 
 let showGrid = true;
@@ -142,7 +142,7 @@ class Character {
   }
 
   draw(renderContext) {
-    const screen = gridToIsometric(this.renderX, this.renderY);
+    const screen = gridToScreen(this.renderX, this.renderY);
     const width = 82;
     const height = 98;
     const x = screen.x - width * 0.5;
@@ -209,32 +209,18 @@ function canMove(x, y) {
   return x >= 0 && x < grid.width && y >= 0 && y < grid.height && collisionMap[y][x] === TILE_EMPTY;
 }
 
-function gridToIsometric(gridX, gridY) {
+function gridToScreen(gridX, gridY) {
   return {
-    x: grid.originX + (gridX - gridY) * (grid.tileWidth / 2),
-    y: grid.originY + (gridX + gridY) * (grid.tileHeight / 2),
+    x: grid.originX + gridX * grid.tileWidth + grid.tileWidth / 2,
+    y: grid.originY + gridY * grid.tileHeight + grid.tileHeight / 2,
   };
 }
 
 function screenToGrid(screenX, screenY) {
-  let bestCell = null;
-  let bestDistance = Infinity;
-
-  for (let y = 0; y < grid.height; y += 1) {
-    for (let x = 0; x < grid.width; x += 1) {
-      const center = gridToIsometric(x, y);
-      const dx = center.x - screenX;
-      const dy = center.y - screenY;
-      const distance = dx * dx + dy * dy;
-
-      if (distance < bestDistance) {
-        bestDistance = distance;
-        bestCell = { x, y };
-      }
-    }
-  }
-
-  return bestCell;
+  return {
+    x: Math.floor((screenX - grid.originX) / grid.tileWidth),
+    y: Math.floor((screenY - grid.originY) / grid.tileHeight),
+  };
 }
 
 function findPath(start, goal) {
@@ -362,7 +348,7 @@ function drawGridOverlay() {
         continue;
       }
 
-      drawIsoTile(x, y, isBlocked, inPath);
+      drawGridCell(x, y, isBlocked, inPath);
     }
   }
 
@@ -370,20 +356,10 @@ function drawGridOverlay() {
   drawTargetMarker(targetCell, "#2563eb", "目标");
 }
 
-function drawIsoTile(x, y, isBlocked, inPath) {
-  const center = gridToIsometric(x, y);
-  const points = getTilePoints(center);
+function drawGridCell(x, y, isBlocked, inPath) {
+  const rect = getCellRect(x, y);
 
   ctx.save();
-  ctx.beginPath();
-  points.forEach((point, index) => {
-    if (index === 0) {
-      ctx.moveTo(point.x, point.y);
-    } else {
-      ctx.lineTo(point.x, point.y);
-    }
-  });
-  ctx.closePath();
   ctx.fillStyle = inPath
     ? "rgba(37, 99, 235, 0.25)"
     : isBlocked
@@ -391,20 +367,20 @@ function drawIsoTile(x, y, isBlocked, inPath) {
       : "rgba(34, 197, 94, 0.08)";
   ctx.strokeStyle = isBlocked ? "rgba(185, 28, 28, 0.65)" : "rgba(21, 128, 61, 0.28)";
   ctx.lineWidth = inPath ? 2 : 1;
-  ctx.fill();
-  ctx.stroke();
+  ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
+  ctx.strokeRect(rect.x + 0.5, rect.y + 0.5, rect.width - 1, rect.height - 1);
   ctx.restore();
 }
 
 function drawTargetMarker(cell, color, label) {
-  const center = gridToIsometric(cell.x, cell.y);
+  const center = gridToScreen(cell.x, cell.y);
 
   ctx.save();
   ctx.strokeStyle = color;
   ctx.fillStyle = "rgba(255, 255, 255, 0.84)";
   ctx.lineWidth = 3;
   ctx.beginPath();
-  ctx.ellipse(center.x, center.y + 5, grid.tileWidth * 0.32, grid.tileHeight * 0.28, 0, 0, Math.PI * 2);
+  ctx.arc(center.x, center.y, Math.min(grid.tileWidth, grid.tileHeight) * 0.35, 0, Math.PI * 2);
   ctx.stroke();
   ctx.font = "bold 12px sans-serif";
   ctx.textAlign = "center";
@@ -416,13 +392,13 @@ function drawTargetMarker(cell, color, label) {
   ctx.restore();
 }
 
-function getTilePoints(center) {
-  return [
-    { x: center.x, y: center.y - grid.tileHeight / 2 },
-    { x: center.x + grid.tileWidth / 2, y: center.y },
-    { x: center.x, y: center.y + grid.tileHeight / 2 },
-    { x: center.x - grid.tileWidth / 2, y: center.y },
-  ];
+function getCellRect(x, y) {
+  return {
+    x: grid.originX + x * grid.tileWidth,
+    y: grid.originY + y * grid.tileHeight,
+    width: grid.tileWidth,
+    height: grid.tileHeight,
+  };
 }
 
 function update(deltaTime) {
@@ -495,6 +471,10 @@ function getCanvasPoint(event) {
 canvas.addEventListener("click", (event) => {
   const point = getCanvasPoint(event);
   const cell = screenToGrid(point.x, point.y);
+  if (cell.x < 0 || cell.x >= grid.width || cell.y < 0 || cell.y >= grid.height) {
+    setStatus("状态：目标不在网格内");
+    return;
+  }
   moveTo(cell);
 });
 
@@ -546,7 +526,8 @@ window.officeDebug = Object.freeze({
   grid,
   collisionMap,
   canMove,
-  gridToIsometric,
+  gridToScreen,
+  gridToIsometric: gridToScreen,
   screenToGrid,
   findPath,
   player,
