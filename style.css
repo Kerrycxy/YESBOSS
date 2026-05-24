@@ -2,6 +2,42 @@
   box-sizing: border-box;
 }
 
+.start-page {
+  margin: 0;
+  min-height: 100vh;
+  background: #f6f7f9;
+}
+
+.start-screen {
+  position: relative;
+  width: min(100vw, 1672px);
+  aspect-ratio: 1672 / 941;
+  margin: 0 auto;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.start-screen img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.start-job-link {
+  position: absolute;
+  left: 68.6%;
+  top: 75.4%;
+  width: 26.8%;
+  height: 9.2%;
+  border-radius: 10px;
+}
+
+.start-job-link:focus-visible {
+  outline: 4px solid #facc15;
+  outline-offset: 4px;
+}
+
 html,
 body {
   margin: 0;

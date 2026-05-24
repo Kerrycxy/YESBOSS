@@ -29,16 +29,16 @@ const defaultTarget = { x: 11, y: 8 };
 
 // 0 = walkable floor, 1 = obstacle. These cells match the top-down map overlay.
 const collisionMap = createCollisionMap(grid.width, grid.height, [
-  { name: "top-left counter", fromX: 2, fromY: 0, toX: 6, toY: 2 },
-  { name: "boss desk", fromX: 8, fromY: 1, toX: 12, toY: 3 },
-  { name: "file cabinets", fromX: 14, fromY: 0, toX: 18, toY: 2 },
-  { name: "left upper desks", fromX: 4, fromY: 5, toX: 8, toY: 7 },
-  { name: "left lower desks", fromX: 4, fromY: 10, toX: 8, toY: 12 },
-  { name: "right upper desks", fromX: 12, fromY: 5, toX: 16, toY: 7 },
-  { name: "right lower desks", fromX: 12, fromY: 10, toX: 16, toY: 12 },
+  { name: "top-left counter", fromX: 1, fromY: 0, toX: 5, toY: 2 },
+  { name: "boss desk", fromX: 7, fromY: 1, toX: 11, toY: 3 },
+  { name: "file cabinets", fromX: 13, fromY: 0, toX: 17, toY: 2 },
+  { name: "left upper desks", fromX: 3, fromY: 5, toX: 7, toY: 7 },
+  { name: "left lower desks", fromX: 3, fromY: 10, toX: 7, toY: 12 },
+  { name: "right upper desks", fromX: 11, fromY: 5, toX: 15, toY: 7 },
+  { name: "right lower desks", fromX: 11, fromY: 10, toX: 15, toY: 12 },
   { name: "left wall", cells: [[0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [0, 8]] },
   { name: "water cooler", cells: [[0, 9], [1, 9], [0, 10]] },
-  { name: "plants", cells: [[0, 1], [1, 1], [1, 10], [18, 6], [18, 11]] },
+  { name: "plants", cells: [[0, 1], [1, 1], [0, 10], [17, 6], [17, 11]] },
 ]);
 
 let showGrid = true;
@@ -60,19 +60,6 @@ characterSprite.addEventListener("load", () => {
   isCharacterSpriteReady = true;
 });
 characterSprite.src = "./assets/character-spritesheet-normalized.png";
-
-const officePeople = [
-  { role: "boss", label: "老板", x: 10, y: 2, direction: "down", frame: 1 },
-  { role: "staff", label: "职员", x: 5.2, y: 6.3, direction: "down", frame: 0 },
-  { role: "staff", label: "职员", x: 7.3, y: 6.3, direction: "down", frame: 2 },
-  { role: "staff", label: "职员", x: 13.4, y: 6.3, direction: "down", frame: 1 },
-  { role: "staff", label: "职员", x: 15.6, y: 11.3, direction: "down", frame: 0 },
-];
-
-const characterRenderSize = {
-  width: 50,
-  height: 60,
-};
 
 class Character {
   constructor(x, y) {
@@ -156,9 +143,10 @@ class Character {
 
   draw(renderContext) {
     const screen = gridToScreen(this.renderX, this.renderY);
-    const { width, height } = characterRenderSize;
+    const width = 82;
+    const height = 98;
     const x = screen.x - width * 0.5;
-    const y = screen.y - height + 8;
+    const y = screen.y - height + 10;
 
     if (!isCharacterSpriteReady) {
       renderContext.fillStyle = "#111827";
@@ -425,65 +413,7 @@ function update(deltaTime) {
 function render() {
   drawScene();
   drawGridOverlay();
-  drawOfficePeople();
   player.draw(ctx);
-}
-
-function drawOfficePeople() {
-  officePeople.forEach((person) => {
-    drawOfficePerson(person);
-  });
-}
-
-function drawOfficePerson(person) {
-  const screen = gridToScreen(person.x, person.y);
-  const { width, height } = characterRenderSize;
-  const x = screen.x - width * 0.5;
-  const y = screen.y - height + 8;
-
-  if (!isCharacterSpriteReady) {
-    ctx.save();
-    ctx.fillStyle = person.role === "boss" ? "#111827" : "#1d4ed8";
-    ctx.fillRect(x + 15, y + 20, 20, 34);
-    ctx.fillStyle = "#f2b07a";
-    ctx.fillRect(x + 17, y + 7, 16, 17);
-    ctx.restore();
-    return;
-  }
-
-  const frameWidth = characterSprite.width / 3;
-  const frameHeight = characterSprite.height / 4;
-  const row = { down: 0, up: 1, left: 2, right: 3 }[person.direction] ?? 0;
-  const frame = person.frame ?? 1;
-
-  ctx.save();
-  ctx.imageSmoothingEnabled = false;
-  ctx.drawImage(
-    characterSprite,
-    frame * frameWidth,
-    row * frameHeight,
-    frameWidth,
-    frameHeight,
-    x,
-    y,
-    width,
-    height,
-  );
-
-  if (person.role === "boss") {
-    ctx.fillStyle = "rgba(255, 255, 255, 0.88)";
-    ctx.strokeStyle = "rgba(17, 24, 39, 0.7)";
-    ctx.lineWidth = 1;
-    ctx.font = "bold 12px sans-serif";
-    ctx.textAlign = "center";
-    const labelWidth = ctx.measureText(person.label).width + 10;
-    ctx.fillRect(screen.x - labelWidth / 2, y - 18, labelWidth, 17);
-    ctx.strokeRect(screen.x - labelWidth / 2, y - 18, labelWidth, 17);
-    ctx.fillStyle = "#111827";
-    ctx.fillText(person.label, screen.x, y - 5);
-  }
-
-  ctx.restore();
 }
 
 function loop(timestamp = 0) {
