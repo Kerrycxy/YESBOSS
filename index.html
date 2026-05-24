@@ -4,13 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Isometric Grid Game Skeleton</title>
-    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./style.css?v=modules-people" />
   </head>
   <body>
     <main class="game-shell" id="gameShell">
       <div class="stage" id="stage">
         <canvas id="gameCanvas" width="1024" height="576" aria-label="Isometric game map"></canvas>
-        <div class="game-ui" id="gameUi" aria-hidden="true">
+        <div class="game-ui" id="gameUi" aria-hidden="false">
           <header class="top-status" aria-label="Game status bar">
             <div class="brand-mark">YES, BOSS!</div>
             <div class="status-card calendar-card">
@@ -166,10 +166,10 @@
           </section>
 
           <nav class="bottom-actions" aria-label="Game actions">
-            <button class="blue" type="button"><span class="button-icon building-icon"></span>公司管理</button>
-            <button class="green" type="button"><span class="button-icon people-icon"></span>员工沟通</button>
-            <button class="orange" type="button"><span class="button-icon chart-icon"></span>项目推进</button>
-            <button class="red" type="button"><span class="button-icon yuan-icon"></span>财务决策</button>
+            <button class="blue" type="button" data-href="./company.html"><span class="button-icon building-icon"></span>公司管理</button>
+            <button class="green" type="button" data-href="./staff.html"><span class="button-icon people-icon"></span>员工沟通</button>
+            <button class="orange" type="button" data-href="./projects.html"><span class="button-icon chart-icon"></span>项目推进</button>
+            <button class="red" type="button" data-href="./finance.html"><span class="button-icon yuan-icon"></span>财务决策</button>
           </nav>
         </div>
       </div>
@@ -179,7 +179,7 @@
       </section>
     </main>
 
-    <script src="./scene-config.js"></script>
-    <script src="./main.js"></script>
+    <script src="./scene-config.js?v=modules-people"></script>
+    <script src="./main.js?v=modules-people"></script>
   </body>
 </html>

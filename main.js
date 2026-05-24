@@ -863,7 +863,7 @@ function openPhoneMode() {
 function closePhoneMode() {
   isPhoneMode = false;
   gameShell.classList.remove("phone-mode");
-  gameUi.setAttribute("aria-hidden", "true");
+  gameUi.setAttribute("aria-hidden", "false");
   canvas.style.cursor = "default";
   showPhoneList();
   playSfx("modalClose");
@@ -875,6 +875,12 @@ document.addEventListener("pointerdown", startBgm, { once: true });
 
 document.querySelectorAll(".bottom-actions button, .phone-tabs button, .phone-actions button").forEach((button) => {
   button.addEventListener("click", () => playSfx("click"));
+});
+
+document.querySelectorAll(".bottom-actions button[data-href]").forEach((button) => {
+  button.addEventListener("click", () => {
+    window.location.href = button.dataset.href;
+  });
 });
 
 document.querySelectorAll(".message-card").forEach((card) => {

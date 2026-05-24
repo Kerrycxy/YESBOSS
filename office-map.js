@@ -61,6 +61,19 @@ characterSprite.addEventListener("load", () => {
 });
 characterSprite.src = "./assets/character-spritesheet-normalized.png";
 
+const officePeople = [
+  { role: "boss", label: "老板", x: 10, y: 2, direction: "down", frame: 1 },
+  { role: "staff", label: "职员", x: 5.2, y: 6.3, direction: "down", frame: 0 },
+  { role: "staff", label: "职员", x: 7.3, y: 6.3, direction: "down", frame: 2 },
+  { role: "staff", label: "职员", x: 13.4, y: 6.3, direction: "down", frame: 1 },
+  { role: "staff", label: "职员", x: 15.6, y: 11.3, direction: "down", frame: 0 },
+];
+
+const characterRenderSize = {
+  width: 50,
+  height: 60,
+};
+
 class Character {
   constructor(x, y) {
     this.x = x;
@@ -143,10 +156,9 @@ class Character {
 
   draw(renderContext) {
     const screen = gridToScreen(this.renderX, this.renderY);
-    const width = 82;
-    const height = 98;
+    const { width, height } = characterRenderSize;
     const x = screen.x - width * 0.5;
-    const y = screen.y - height + 10;
+    const y = screen.y - height + 8;
 
     if (!isCharacterSpriteReady) {
       renderContext.fillStyle = "#111827";
@@ -413,7 +425,65 @@ function update(deltaTime) {
 function render() {
   drawScene();
   drawGridOverlay();
+  drawOfficePeople();
   player.draw(ctx);
+}
+
+function drawOfficePeople() {
+  officePeople.forEach((person) => {
+    drawOfficePerson(person);
+  });
+}
+
+function drawOfficePerson(person) {
+  const screen = gridToScreen(person.x, person.y);
+  const { width, height } = characterRenderSize;
+  const x = screen.x - width * 0.5;
+  const y = screen.y - height + 8;
+
+  if (!isCharacterSpriteReady) {
+    ctx.save();
+    ctx.fillStyle = person.role === "boss" ? "#111827" : "#1d4ed8";
+    ctx.fillRect(x + 15, y + 20, 20, 34);
+    ctx.fillStyle = "#f2b07a";
+    ctx.fillRect(x + 17, y + 7, 16, 17);
+    ctx.restore();
+    return;
+  }
+
+  const frameWidth = characterSprite.width / 3;
+  const frameHeight = characterSprite.height / 4;
+  const row = { down: 0, up: 1, left: 2, right: 3 }[person.direction] ?? 0;
+  const frame = person.frame ?? 1;
+
+  ctx.save();
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(
+    characterSprite,
+    frame * frameWidth,
+    row * frameHeight,
+    frameWidth,
+    frameHeight,
+    x,
+    y,
+    width,
+    height,
+  );
+
+  if (person.role === "boss") {
+    ctx.fillStyle = "rgba(255, 255, 255, 0.88)";
+    ctx.strokeStyle = "rgba(17, 24, 39, 0.7)";
+    ctx.lineWidth = 1;
+    ctx.font = "bold 12px sans-serif";
+    ctx.textAlign = "center";
+    const labelWidth = ctx.measureText(person.label).width + 10;
+    ctx.fillRect(screen.x - labelWidth / 2, y - 18, labelWidth, 17);
+    ctx.strokeRect(screen.x - labelWidth / 2, y - 18, labelWidth, 17);
+    ctx.fillStyle = "#111827";
+    ctx.fillText(person.label, screen.x, y - 5);
+  }
+
+  ctx.restore();
 }
 
 function loop(timestamp = 0) {
