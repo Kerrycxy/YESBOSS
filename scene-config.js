@@ -29,7 +29,7 @@ window.sceneConfig = {
       label: "办公室",
       x: 0,
       y: 12,
-      href: "./office.html",
+      href: "./office2.html",
     },
   ],
   movement: {
