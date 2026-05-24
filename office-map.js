@@ -570,7 +570,7 @@ function update(deltaTime) {
     currentPath = [...player.path];
 
     if (player.x === officeDoor.x && player.y === officeDoor.y) {
-      window.location.href = "./index.html";
+      window.location.href = "./office2.html";
       return;
     }
 
